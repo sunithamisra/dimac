@@ -15,9 +15,11 @@
 
 from flask import Flask, render_template, url_for, Response
 from flask.ext.sqlalchemy import SQLAlchemy
+from dimac_default_settings import *
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
+##db_login = SQLAlchemy(app)
 #app.config.from_pyfile(config.py) 
 # FIXME: The above line gives error - so added the following 2 lines for now
 #SQLALCHEMY_DATABASE_URI = "postgresql://bcadmin:bcadmin@localhost/DimacImages"
@@ -28,9 +30,16 @@ import os
 import dimac_utils
 import xml.etree.ElementTree as ET
 
+# FIXME: The following two lines for configuration are supposed to be
+# in __init__.py. But somehow they are not getting picked up here. So
+# added them here. Need to move it back there so these can be used by
+# all the files.
+
+app.config.from_object('dimac_default_settings')
+#app.config.from_envvar('DIMAC_SETTINGS')
+
 image_list = []
-#image_dir = app.config['IMAGEDIR']  # FIXME: This is giving keyerror.
-image_dir = "/home/bcadmin/disk_images"
+image_dir = app.config['IMAGEDIR']
 
 #
 # dimacGetXmlInfo: Extracts information from the dfxml file
@@ -184,6 +193,7 @@ def index(image_name = None):
     print("img", image.acq_date)
     return render_template("db_temp.html", image=image)
     '''
+
 if __name__=="__main__":
     db = SQLAlchemy(app)
     dbinit()
