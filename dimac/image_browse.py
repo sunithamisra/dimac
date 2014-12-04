@@ -13,7 +13,7 @@
 #
 
 from flask import Flask, render_template, url_for, Response, stream_with_context, request, flash, session, redirect
-from forms import ContactForm, SignupForm, SigninForm
+from dimac_forms import ContactForm, SignupForm, SigninForm
 
 #from flask.ext.mail import Message, Mail
 from flask_mail import Mail, Message
@@ -285,15 +285,15 @@ def signup():
 
 @app.route('/home')
 def home():
-    return render_template('profile.html')
+    return render_template('fl_profile.html')
 
 @app.route('/about')
 def about():
-    return render_template('profile.html')
+    return render_template('fl_profile.html')
 
 @app.route('/contact')
 def contact():
-    return render_template('profile.html')
+    return render_template('fl_profile.html')
 
 @app.route('/profile')
 def profile():
@@ -306,7 +306,7 @@ def profile():
   if user is None:
     return redirect(url_for('signin'))
   else:
-    return render_template('profile.html')
+    return render_template('fl_profile.html')
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
