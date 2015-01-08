@@ -14,6 +14,7 @@
 import pytsk3
 import os, sys, string, time, re
 import subprocess
+import fileinput
 
 #FIXME: Note: This file is created to be the common utils file. A few 
 # routines are moved here from image_browse.py file, but are also retained
@@ -164,4 +165,73 @@ class dimac:
             subprocess.check_output(cmd, shell=True)
             print("Need an E01 file to return xml file")
             return None
+           
+    def fixup_dfxmlfile_temp(self, dfxmlfile):
+        ## print("D: Fix up the dfxml file: ")
+        with open(dfxmlfile) as fin, open("tempfile", "w") as fout:
+            for line in fin:
+                if not "xmlns" in line:
+                    if "dc:type" in line:
+                        line = line.replace("dc:type","type")
+                    fout.write(line)
+
+        fin.close()
+        fout.close()
+
+        cmd = "mv tempfile " + dfxmlfile
+        subprocess.check_output(cmd, shell=True)
+        print(">> : Updated dfxmlfile ")
+        return dfxmlfile
         
+
+    def fixup_dfxmlfile(self, dfxmlfile):
+        ##fin = open(dfxmlfile)
+        ##fout = open("tempfile", "w")
+
+        '''
+        with open(dfxmlfile) as fin, open("tempfile") as fout:
+            for line in fin:
+                if not "xmlns" in line:
+                    fout.write(line)
+        '''
+        linenumber = 0
+        for line in fileinput.input (dfxmlfile, inplace=1):
+            linenumber += 1
+            if "xmlns" in line:
+                print "",
+            if linenumber > 6:
+                break
+            
+            
+
+
+    def dbGetInfoFromDfxml(self, image_name):
+        # First generate the dfxml file for the image
+        #ewfinfo_xmlfile = os.getcwd() +"/"+ image_name+".xml"
+        dfxmlfile = image_name+"_dfxml.xml"
+        #cmd = "ewfinfo -f dfxml "+image_name+ " > "+ewfinfo_xmlfile
+
+        '''
+        # FIXME: Just for testing: dfxml removed and recreted.
+        #if dfxml_dir:
+        if os.path.exists(dfxmlfile):
+            rmcmd = ['rm', dfxmlfile]
+            subprocess.check_output(rmcmd)
+        '''
+
+
+        if not os.path.exists(dfxmlfile):
+            printstr = "WARNING!!! DFXML FIle " + dfxmlfile + " does NOT exist. Creating one"
+            print (printstr) 
+            cmd = ['fiwalk', '-b', '-g', '-z', '-X', dfxmlfile, image_name]
+            print ("CMD: ", dfxmlfile, cmd)
+            subprocess.check_output(cmd)
+     
+
+        # Remove the name space info as the xml parsing won't give proper
+        # tags with the name space prefix attached.
+        print("D: Fiwalk generated dfxml file. Fixing it up now ")
+        #self.fixup_dfxmlfile(dfxmlfile)
+        dfxmlfile = self.fixup_dfxmlfile_temp(dfxmlfile)
+        
+        return dfxmlfile
