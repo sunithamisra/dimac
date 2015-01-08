@@ -60,7 +60,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bcadmin:bcadmin@localhost/
  
 from dimac_userlogin_db import db_login
 db_login.init_app(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bcadmin:bcadmin@localhost/userlogin_db'
+'''
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bcadmin:bcadmin@localhost/bcdb'
+from dimac_db import db
+db.init_app(app)
+'''
 #dimac_userlogin_db.dbinit()
 #db_login.session.commit()
  
