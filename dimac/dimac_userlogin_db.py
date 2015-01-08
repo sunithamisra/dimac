@@ -22,7 +22,6 @@ class User(db_login.Model):
     self.set_password(password)
      
   def set_password(self, password):
-    print "SSSSSSSPPPPPPPPPPP"
     self.pwdhash = generate_password_hash(password)
    
   def check_password(self, password):
