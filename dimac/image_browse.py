@@ -126,7 +126,7 @@ def image_psql(image_name):
 
     return render_template("db_image_template.html", 
                            image_name = image_name,
-                           image=image_db[image_index])
+                           image=image_db[int(image_index)])
 
 #
 # Template rendering for Directory Listing per partition
@@ -257,7 +257,13 @@ def file_clicked(image_name, image_partition, path):
         '''
 @app.route('/testdb')
 def testdb():
+    '''
     if db_login.session.query("1").from_statement("SELECT 1").all():
+        return 'It works.'
+    else:
+        return 'Something is broken.'
+    '''
+    if dimac_db.db.session.query("1").from_statement("SELECT 1").all():
         return 'It works.'
     else:
         return 'Something is broken.'
