@@ -13,7 +13,8 @@ class User(db_login.Model):
   firstname = db_login.Column(db_login.String(100))
   lastname = db_login.Column(db_login.String(100))
   email = db_login.Column(db_login.String(120), unique=True)
-  pwdhash = db_login.Column(db_login.String(54))
+  #pwdhash = db_login.Column(db_login.String(54))
+  pwdhash = db_login.Column(db_login.String(200))
    
   def __init__(self, firstname, lastname, email, password):
     self.firstname = firstname.title()
